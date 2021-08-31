@@ -20,8 +20,8 @@ class AddWarpCommand extends Command {
     public function __construct()
     {
         parent::__construct(
-            "addwarp",
-            "Add a new warp location"
+            'addwarp',
+            'Add a new warp location'
         );
 
         $this->formManager = Main::getInstance()->getFormManager();
@@ -35,7 +35,13 @@ class AddWarpCommand extends Command {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
         if (!($sender instanceof Player)) {
-            $sender->sendMessage(TextFormat::RED . "Please, use this command in-game!");
+            $sender->sendMessage(TextFormat::RED . 'Please, use this command in-game!');
+
+            return false;
+        }
+
+        if (!$sender->isOp()) {
+            $sender->sendMessage(TextFormat::RED . 'You do not have permissions!');
 
             return false;
         }

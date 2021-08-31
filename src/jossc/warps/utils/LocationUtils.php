@@ -12,7 +12,7 @@ class LocationUtils {
      * @return Location
      */
     public static function stringToLocation(string $locationString): Location {
-        $locationArray = explode(":", $locationString);
+        $locationArray = explode(':', $locationString);
 
         return new Location(
             (int) $locationArray[0],

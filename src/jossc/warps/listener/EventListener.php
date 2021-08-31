@@ -10,7 +10,6 @@ use pocketmine\event\player\{
     PlayerJoinEvent
 };
 use pocketmine\item\Item;
-use pocketmine\utils\TextFormat;
 
 class EventListener implements  Listener {
 
@@ -19,8 +18,6 @@ class EventListener implements  Listener {
 
     /*** @var FormManager */
     private $formManager;
-
-    const WARPS_CUSTOM_NAME = TextFormat::BOLD . TextFormat::GREEN . "Warps";
 
     /*** EventListener constructor.*/
     public function __construct() {
@@ -33,20 +30,22 @@ class EventListener implements  Listener {
     public function onJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
 
-        $player->getInventory()->clearAll();
+        if ($this->main->isGiveItemWhenJoin()) {
+            $player->getInventory()->clearAll();
 
-        $warpsItem = Item::get(Item::FEATHER)->setCustomName(
-            self::WARPS_CUSTOM_NAME
-        );
+            $warpsItem = Item::get(Item::FEATHER)->setCustomName(
+                $this->main->getItemCustomName()
+            );
 
-        $player->getInventory()->setItem(4, $warpsItem);
+            $player->getInventory()->setItem(4, $warpsItem);
+        }
     }
 
     /*** @param PlayerInteractEvent $event */
     public function onInteract(PlayerInteractEvent $event): void {
         $item = $event->getItem();
 
-        if ($item->getCustomName() === self::WARPS_CUSTOM_NAME) {
+        if ($item->getCustomName() === $this->main->getItemCustomName()) {
             $this->formManager->showWarpsMenu($event->getPlayer());
         }
     }

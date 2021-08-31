@@ -21,6 +21,12 @@ class Main extends PluginBase {
     /*** @var FormManager */
     private $formManager;
 
+    /*** @var bool */
+    private $giveItemWhenJoin = false;
+
+    /*** @var string */
+    private $itemCustomName = "Custom Name";
+
     public function onEnable() {
         parent::onEnable();
 
@@ -29,6 +35,10 @@ class Main extends PluginBase {
         self::$instance = $this;
         $this->storage = new WarpsStorage();
         $this->formManager = new FormManager();
+
+        $itemConfig = $this->getConfig()->get("item");
+        $this->giveItemWhenJoin = (bool) $itemConfig["give_item_when_join"];
+        $this->itemCustomName = TextFormat::colorize((string) $itemConfig["custom_name"]);
 
         $this->reloadWarpsConfig();
 
@@ -39,25 +49,25 @@ class Main extends PluginBase {
             $this
         );
 
-        $this->getLogger()->info(TextFormat::GREEN . "This plugin has been enabled!");
+        $this->getLogger()->info(TextFormat::GREEN . 'This plugin has been enabled!');
     }
 
     public function onDisable() {
         parent::onDisable();
 
-        $this->getLogger()->info(TextFormat::RED . "This plugin has been disabled!");
+        $this->getLogger()->info(TextFormat::RED . 'This plugin has been disabled!');
     }
 
     private function registerCommands(): void {
         $commandMap = $this->getServer()->getCommandMap();
 
         $commandMap->register(
-            "addwarp",
+            'addwarp',
             new AddWarpCommand()
         );
 
         $commandMap->register(
-            "reloadwarps",
+            'reloadwarps',
             new ReloadWarpsCommand()
         );
     }
@@ -65,16 +75,16 @@ class Main extends PluginBase {
     public function reloadWarpsConfig(): void {
         $config = $this->getConfig();
 
-        if (!$config->exists("warps")) {
+        if (!$config->exists('warps')) {
             return;
         }
 
         $storage = $this->storage;
 
-        $warps = $config->get("warps");
+        $warps = $config->get('warps');
 
         foreach ($warps as $warpData) {
-            $warpDataArray = explode(";", $warpData);
+            $warpDataArray = explode(';', $warpData);
 
             $storage->add($warpDataArray[0], $warpDataArray[1]);
         }
@@ -93,5 +103,17 @@ class Main extends PluginBase {
     /*** @return FormManager */
     public function getFormManager(): FormManager {
         return $this->formManager;
+    }
+
+    /*** @return bool */
+    public function isGiveItemWhenJoin(): bool
+    {
+        return $this->giveItemWhenJoin;
+    }
+
+    /*** @return string */
+    public function getItemCustomName(): string
+    {
+        return $this->itemCustomName;
     }
 }

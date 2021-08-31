@@ -14,3 +14,19 @@ If you encounter any bugs, have suggestions or questions, [create an issue](http
 
 - /addwarp | This command will open a form, in which you must put a name or identifier, which does not already exist between the warps and which is not empty
 - /reloadwarps | This will reload all the warps, this works in case you edit the warps in the configuration and you want the changes to be loaded
+
+Both commands require the player to be an operator!
+
+## Configuration
+
+```yml
+item:
+  allowed_give_item_to_join: false
+  custom_name: "&a&lWarps"
+
+warps:
+  - test;252.2534:65:246.767:171.47085571289:15.317016601562:world 
+    # the identifier or name is the one before the symbol ";" in this case it is "test",
+    # after the symbol already mentioned, you will see the symbol ":" that separates the location where the warp is,
+    # example "x: y: z: worldName"
+```
