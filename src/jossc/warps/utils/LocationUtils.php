@@ -7,6 +7,10 @@ use pocketmine\Server;
 
 class LocationUtils {
 
+    /**
+     * @param string $locationString
+     * @return Location
+     */
     public static function stringToLocation(string $locationString): Location {
         $locationArray = explode(":", $locationString);
 
@@ -20,6 +24,10 @@ class LocationUtils {
         );
     }
 
+    /**
+     * @param Location $location
+     * @return string
+     */
     public static function locationToString(Location $location): string {
         return "$location->x:$location->y:$location->z:$location->yaw:$location->pitch:{$location->getLevel()->getFolderName()}";
     }

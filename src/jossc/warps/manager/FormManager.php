@@ -2,8 +2,12 @@
 
 namespace jossc\warps\manager;
 
-use lib\FormAPI\window\CustomWindowForm;
-use lib\FormAPI\window\SimpleWindowForm;
+use jossc\warps\utils\LocationUtils;
+use lib\FormAPI\elements\Button;
+use lib\FormAPI\window\{
+    CustomWindowForm,
+    SimpleWindowForm
+};
 use jossc\warps\Main;
 use jossc\warps\storage\WarpsStorage;
 use pocketmine\Player;
@@ -13,19 +17,36 @@ class FormManager {
 
     /*** @var Main */
     private $main;
+
     /*** @var WarpsStorage */
     private $storage;
 
+    /*** FormManager constructor.*/
     public function __construct()
     {
         $this->main = Main::getInstance();
         $this->storage = $this->main->getStorage();
     }
 
+    /*** @param Player $player */
     public function showWarpsMenu(Player $player): void {
         $form = new SimpleWindowForm(
             "warps",
-            "Warps"
+            "Warps",
+            "",
+            function (Player $player, Button $button) {
+                $warp = $this->storage->get($button->getName());
+
+                if (is_null($warp)) {
+                    $player->sendMessage(TextFormat::RED . "That warp does not exist!");
+
+                    return;
+                }
+
+                $player->sendMessage(TextFormat::GREEN . "Teleporting...");
+
+                $player->teleport($warp->getLocation());
+            }
         );
 
         $storage = $this->storage;
@@ -55,10 +76,39 @@ class FormManager {
         $form->showTo($player);
     }
 
+    /*** @param Player $player */
     public function showAddWarpMenu(Player $player): void {
         $form = new CustomWindowForm(
             "warps_add",
-            "Add new Warp"
+            "Add new Warp",
+            "",
+            function (Player $player, CustomWindowForm $form) {
+                $warpId = $form->getElement("id");
+
+                if ($this->storage->contains($warpId->getFinalValue())) {
+                    $player->sendMessage(TextFormat::RED . "That warp id already exist!.");
+
+                    return;
+                }
+
+                $main = $this->main;
+
+                $config = $main->getConfig();
+
+                $locationToString = LocationUtils::locationToString($player->getLocation());
+
+                $warps = $config->get("warps");
+                array_push($warps, "{$warpId->getFinalValue()};$locationToString");
+
+                $config->set("warps", $warps);
+                $config->save();
+
+                $main->reloadWarpsConfig();
+
+                $player->sendMessage(
+                    TextFormat::GREEN . "You have successfully created the warp: {$warpId->getFinalValue()}!"
+                );
+            }
         );
 
         $form->addInput("id", "Please insert a warp id:");

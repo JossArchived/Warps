@@ -2,7 +2,8 @@
 
 namespace jossc\warps;
 
-use jossc\warps\command\SetWarpCommand;
+use jossc\warps\command\AddWarpCommand;
+use jossc\warps\command\ReloadWarpsCommand;
 use jossc\warps\listener\EventListener;
 use jossc\warps\manager\FormManager;
 use jossc\warps\storage\WarpsStorage;
@@ -13,13 +14,14 @@ class Main extends PluginBase {
 
     /*** @var Main */
     private static $instance;
+
     /*** @var WarpsStorage */
     private $storage;
+
     /*** @var FormManager */
     private $formManager;
 
-    public function onEnable()
-    {
+    public function onEnable() {
         parent::onEnable();
 
         $this->saveDefaultConfig();
@@ -30,10 +32,7 @@ class Main extends PluginBase {
 
         $this->reloadWarpsConfig();
 
-        $this->getServer()->getCommandMap()->register(
-            "setwarp",
-            new SetWarpCommand()
-        );
+        $this->registerCommands();
 
         $this->getServer()->getPluginManager()->registerEvents(
             new EventListener(),
@@ -41,6 +40,26 @@ class Main extends PluginBase {
         );
 
         $this->getLogger()->info(TextFormat::GREEN . "This plugin has been enabled!");
+    }
+
+    public function onDisable() {
+        parent::onDisable();
+
+        $this->getLogger()->info(TextFormat::RED . "This plugin has been disabled!");
+    }
+
+    private function registerCommands(): void {
+        $commandMap = $this->getServer()->getCommandMap();
+
+        $commandMap->register(
+            "addwarp",
+            new AddWarpCommand()
+        );
+
+        $commandMap->register(
+            "reloadwarps",
+            new ReloadWarpsCommand()
+        );
     }
 
     public function reloadWarpsConfig(): void {
@@ -62,27 +81,17 @@ class Main extends PluginBase {
     }
 
     /*** @return Main */
-    public static function getInstance(): Main
-    {
+    public static function getInstance(): Main {
         return self::$instance;
     }
 
     /*** @return WarpsStorage */
-    public function getStorage(): WarpsStorage
-    {
+    public function getStorage(): WarpsStorage {
         return $this->storage;
     }
 
     /*** @return FormManager */
-    public function getFormManager(): FormManager
-    {
+    public function getFormManager(): FormManager {
         return $this->formManager;
-    }
-
-    public function onDisable()
-    {
-        parent::onDisable();
-
-        $this->getLogger()->info(TextFormat::RED . "This plugin has been disabled!");
     }
 }

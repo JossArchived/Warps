@@ -12,6 +12,11 @@ class Warp {
     /*** @var Location */
     private $location;
 
+    /**
+     * Warp constructor.
+     * @param string $id
+     * @param Location $location
+     */
     public function __construct(string $id, Location $location)
     {
         $this->id = $id;
