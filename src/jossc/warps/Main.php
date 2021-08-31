@@ -4,6 +4,7 @@ namespace jossc\warps;
 
 use jossc\warps\command\AddWarpCommand;
 use jossc\warps\command\ReloadWarpsCommand;
+use jossc\warps\command\WarpsCommand;
 use jossc\warps\listener\EventListener;
 use jossc\warps\manager\FormManager;
 use jossc\warps\storage\WarpsStorage;
@@ -69,6 +70,11 @@ class Main extends PluginBase {
         $commandMap->register(
             'reloadwarps',
             new ReloadWarpsCommand()
+        );
+
+        $commandMap->register(
+            'warps',
+            new WarpsCommand()
         );
     }
 

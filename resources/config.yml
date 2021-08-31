@@ -1,3 +1,4 @@
 item:
   give_item_when_join: false
   custom_name: "&a&lWarps"
+warps: []

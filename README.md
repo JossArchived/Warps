@@ -17,6 +17,8 @@ If you encounter any bugs, have suggestions or questions, [create an issue](http
 
 Both commands require the player to be an operator!
 
+- /warps | This command is used to see the list of available warps!
+
 ## Configuration
 
 ```yml
