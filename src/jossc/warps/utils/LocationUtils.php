@@ -29,6 +29,6 @@ class LocationUtils {
      * @return string
      */
     public static function locationToString(Location $location): string {
-        return "$location->x:$location->y:$location->z:$location->yaw:$location->pitch:{$location->getLevel()->getFolderName()}";
+        return (int) $location->x . ":" . (int) $location->y . ":" . (int) $location->z . ":$location->yaw:$location->pitch:{$location->getLevel()->getFolderName()}";
     }
 }

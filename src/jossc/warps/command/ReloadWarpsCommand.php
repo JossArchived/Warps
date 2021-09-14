@@ -15,8 +15,7 @@ class ReloadWarpsCommand extends Command {
     private $main;
 
     /*** ReloadWarpsCommand constructor.*/
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct(
             'reloadwarps',
             'Reload all warps'
@@ -38,7 +37,7 @@ class ReloadWarpsCommand extends Command {
             return false;
         }
 
-        $this->main->reloadWarpsConfig();
+        $this->main->getStorage()->reload();
 
         $sender->sendMessage(TextFormat::GREEN . 'All warps reloaded!');
 

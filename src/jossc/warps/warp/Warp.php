@@ -17,21 +17,18 @@ class Warp {
      * @param string $id
      * @param Location $location
      */
-    public function __construct(string $id, Location $location)
-    {
+    public function __construct(string $id, Location $location) {
         $this->id = $id;
         $this->location = $location;
     }
 
     /*** @return string */
-    public function getId(): string
-    {
+    public function getId(): string {
         return $this->id;
     }
 
     /*** @return Location */
-    public function getLocation(): Location
-    {
+    public function getLocation(): Location {
         return $this->location;
     }
 }

@@ -3,6 +3,7 @@
 namespace jossc\warps\manager;
 
 use jossc\warps\utils\LocationUtils;
+use jossc\warps\warp\Warp;
 use lib\FormAPI\elements\Button;
 use lib\FormAPI\window\{
     CustomWindowForm,
@@ -22,8 +23,7 @@ class FormManager {
     private $storage;
 
     /*** FormManager constructor.*/
-    public function __construct()
-    {
+    public function __construct() {
         $this->main = Main::getInstance();
         $this->storage = $this->main->getStorage();
     }
@@ -39,13 +39,14 @@ class FormManager {
 
         $warps = $storage->getWarps();
 
-        if (count($warps) == 0) {
+        if ($storage->isEmpty()) {
             $player->sendMessage(TextFormat::RED . 'There are no warps to see!');
 
             return;
         }
 
         foreach ($warps as $value) {
+            /**@var Warp $warp*/
             $warp = $storage->get($value->getId());
 
             if (is_null($warp)) {
@@ -60,6 +61,7 @@ class FormManager {
         }
 
         $form->addHandler(function (Player $player, Button $button) {
+            /**@var Warp $warp*/
             $warp = $this->storage->get($button->getName());
 
             if (is_null($warp)) {
@@ -86,44 +88,84 @@ class FormManager {
         $form->addInput('id', 'Please insert a warp id:');
 
         $form->addHandler(function (Player $player, CustomWindowForm $form) {
-            $warpId = $form->getElement('id');
-            $warp = $warpId->getFinalValue();
+            $warp = $form->getElement('id');
+            $warpId = $warp->getFinalValue();
 
-            if (strlen($warp) === 0) {
+            if (strlen($warpId) === 0) {
                 $player->sendMessage(TextFormat::RED . 'Please, insert a valid name or identifier!');
 
                 return;
             }
 
-            if ($this->storage->contains($warp)) {
+            $storage = $this->storage;
+
+            if ($storage->contains($warpId)) {
                 $player->sendMessage(TextFormat::RED . 'That warp id already exist!');
 
                 return;
             }
 
-            $main = $this->main;
-
-            $config = $main->getConfig();
-
             $locationToString = LocationUtils::locationToString($player->getLocation());
 
-            $warps = $config->get('warps');
-            array_push($warps, "$warp;$locationToString");
+            $warps = $this->main->getConfig()->get('warps');
+            array_push($warps, "$warpId;$locationToString");
 
-            $config->set('warps', $warps);
-            $config->save();
-
-            $main->reloadWarpsConfig();
+            $storage->set($warps);
 
             $player->sendMessage(
-                TextFormat::GREEN . "You have successfully created the warp: $warp!"
+                TextFormat::GREEN . "You have successfully created the warp: $warpId!"
             );
         });
 
         $form->showTo($player);
     }
 
+    /*** @param Player $player */
     public function showRemoveWarpMenu(Player $player): void {
+        $form = new CustomWindowForm(
+            'warps',
+            'Warps List'
+        );
 
+        $storage = $this->storage;
+
+        $warps = $storage->getWarps();
+
+        if ($storage->isEmpty()) {
+            $player->sendMessage(TextFormat::RED . 'There are no warps to see!');
+
+            return;
+        }
+
+        $warpsWithId = [];
+
+        foreach ($warps as $warp) {
+            /**@var Warp $warp*/
+            array_push($warpsWithId, $warp->getId());
+        }
+
+        $form->addDropdown("warp", "Select the warp to remove:", $warpsWithId);
+
+        $form->addHandler(function (Player $player, CustomWindowForm $form) {
+            $warp = $form->getElement("warp");
+
+            $warpId = $warp->getFinalValue();
+
+            $storage = $this->storage;
+
+            if (!$storage->contains($warpId)) {
+                $player->sendMessage(TextFormat::RED . 'That warp does not exist!');
+
+                return;
+            }
+
+            $storage->removeFromStorage($warpId);
+
+            $player->sendMessage(
+                TextFormat::GREEN . "You have successfully removed the warp: $warpId!"
+            );
+        });
+
+        $form->showTo($player);
     }
 }

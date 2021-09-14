@@ -42,7 +42,7 @@ class Main extends PluginBase {
         $this->giveItemWhenJoin = (bool) $itemConfig["give_item_when_join"];
         $this->itemCustomName = TextFormat::colorize((string) $itemConfig["custom_name"]);
 
-        $this->reloadWarpsConfig();
+        $this->storage->reload();
 
         $this->registerCommands();
 
@@ -84,24 +84,6 @@ class Main extends PluginBase {
         );
     }
 
-    public function reloadWarpsConfig(): void {
-        $config = $this->getConfig();
-
-        if (!$config->exists('warps')) {
-            return;
-        }
-
-        $storage = $this->storage;
-
-        $warps = $config->get('warps');
-
-        foreach ($warps as $warpData) {
-            $warpDataArray = explode(';', $warpData);
-
-            $storage->add($warpDataArray[0], $warpDataArray[1]);
-        }
-    }
-
     /*** @return Main */
     public static function getInstance(): Main {
         return self::$instance;
@@ -118,14 +100,12 @@ class Main extends PluginBase {
     }
 
     /*** @return bool */
-    public function isGiveItemWhenJoin(): bool
-    {
+    public function isGiveItemWhenJoin(): bool {
         return $this->giveItemWhenJoin;
     }
 
     /*** @return string */
-    public function getItemCustomName(): string
-    {
+    public function getItemCustomName(): string {
         return $this->itemCustomName;
     }
 }

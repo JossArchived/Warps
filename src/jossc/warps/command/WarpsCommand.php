@@ -17,8 +17,7 @@ class WarpsCommand extends Command {
     private $formManager;
 
     /*** AddWarpCommand constructor.*/
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct(
             'warps',
             'See a warps list'
