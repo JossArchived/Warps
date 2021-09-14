@@ -15,19 +15,19 @@ use pocketmine\utils\TextFormat;
 class Main extends PluginBase {
 
     /*** @var Main */
-    private static Main $instance;
+    private static $instance;
 
     /*** @var WarpsStorage */
-    private WarpsStorage $storage;
+    private $storage;
 
     /*** @var FormManager */
-    private FormManager $formManager;
+    private $formManager;
 
     /*** @var bool */
-    private bool $giveItemWhenJoin = false;
+    private $giveItemWhenJoin = false;
 
     /*** @var string */
-    private string $itemCustomName = "Custom Name";
+    private $itemCustomName = "Custom Name";
 
     public function onEnable() {
         parent::onEnable();

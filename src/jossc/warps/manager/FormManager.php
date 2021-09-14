@@ -123,7 +123,7 @@ class FormManager {
         $form->showTo($player);
     }
 
-    public function showRemoveWarpMenu(Player $player) {
+    public function showRemoveWarpMenu(Player $player): void {
 
     }
 }
