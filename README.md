@@ -13,11 +13,13 @@ If you encounter any bugs, have suggestions or questions, [create an issue](http
 ## Commands
 
 - /addwarp | This command will open a form, in which you must put a name or identifier, which does not already exist between the warps and which is not empty
+- /removewarp | This command will open a form if you have warps created, where you can select the warp that you want to eliminate, once eliminated, it has no turn back!
 - /reloadwarps | This will reload all the warps, this works in case you edit the warps in the configuration and you want the changes to be loaded
 
-Both commands require the player to be an operator!
+These commands require the player to be an operator!
 
 - /warps | This command is used to see the list of available warps!
+
 
 ## Configuration
 

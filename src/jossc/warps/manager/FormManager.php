@@ -122,4 +122,8 @@ class FormManager {
 
         $form->showTo($player);
     }
+
+    public function showRemoveWarpMenu(Player $player) {
+
+    }
 }

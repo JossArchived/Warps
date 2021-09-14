@@ -3,6 +3,7 @@
 namespace jossc\warps;
 
 use jossc\warps\command\AddWarpCommand;
+use jossc\warps\command\RemoveWarpCommand;
 use jossc\warps\command\ReloadWarpsCommand;
 use jossc\warps\command\WarpsCommand;
 use jossc\warps\listener\EventListener;
@@ -65,6 +66,11 @@ class Main extends PluginBase {
         $commandMap->register(
             'addwarp',
             new AddWarpCommand()
+        );
+
+        $commandMap->register(
+            'removewarp',
+            new RemoveWarpCommand()
         );
 
         $commandMap->register(
