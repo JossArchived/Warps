@@ -12,7 +12,7 @@ use pocketmine\utils\TextFormat;
 class ReloadWarpsCommand extends Command {
 
     /*** @var Main */
-    private $main;
+    private Main $main;
 
     /*** ReloadWarpsCommand constructor.*/
     public function __construct()

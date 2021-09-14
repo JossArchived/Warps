@@ -14,7 +14,7 @@ use pocketmine\utils\TextFormat;
 class WarpsCommand extends Command {
 
     /*** @var FormManager */
-    private $formManager;
+    private FormManager $formManager;
 
     /*** AddWarpCommand constructor.*/
     public function __construct()

@@ -29,8 +29,8 @@ jobs:
           phpstan-config: phpstan.neon.dist
 
   build:
-    name: Phar building
     runs-on: ubuntu-latest
+    needs: [ phpstan ]
     if: contains(github.event.head_commit.message, '[ci skip]') != 'true'
 
     steps:
@@ -56,5 +56,25 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: Builder
+          name: Warps
           path: vendor/PharBuilder/Warps_V1.phar
+
+  prepare-release:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    if: contains(github.event.head_commit.message, '[ci skip]') != 'true'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Restore release caches
+        uses: actions/download-artifact@v2
+
+      - name: Create and Publish Release
+        uses: marvinpinto/action-automatic-releases@v1.1.1
+        with:
+          automatic_release_tag: "latest"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "Official version"
+          prerelease: false
+          files: |
+            vendor/PharBuilder/Warps_V1.phar

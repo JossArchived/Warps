@@ -14,10 +14,10 @@ use pocketmine\item\Item;
 class EventListener implements  Listener {
 
     /*** @var Main */
-    private $main;
+    private Main $main;
 
     /*** @var FormManager */
-    private $formManager;
+    private FormManager $formManager;
 
     /*** EventListener constructor.*/
     public function __construct() {
