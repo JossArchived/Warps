@@ -91,6 +91,13 @@ abstract class WindowForm implements Form {
         $player->sendForm($this);
     }
 
+    /*** @param Closure $response */
+    public function addHandler(Closure $response): void {
+       if ($response != null) {
+           $this->onResponse($response);
+       }
+    }
+
     /**
      * @param Closure $closure
      * @return $this

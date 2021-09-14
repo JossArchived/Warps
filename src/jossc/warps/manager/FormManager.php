@@ -32,21 +32,7 @@ class FormManager {
     public function showWarpsMenu(Player $player): void {
         $form = new SimpleWindowForm(
             'warps',
-            'Warps List',
-            '',
-            function (Player $player, Button $button) {
-                $warp = $this->storage->get($button->getName());
-
-                if (is_null($warp)) {
-                    $player->sendMessage(TextFormat::RED . 'That warp does not exist!');
-
-                    return;
-                }
-
-                $player->sendMessage(TextFormat::GREEN . 'Teleporting...');
-
-                $player->teleport($warp->getLocation());
-            }
+            'Warps List'
         );
 
         $storage = $this->storage;
@@ -73,6 +59,20 @@ class FormManager {
             );
         }
 
+        $form->addHandler(function (Player $player, Button $button) {
+            $warp = $this->storage->get($button->getName());
+
+            if (is_null($warp)) {
+                $player->sendMessage(TextFormat::RED . 'That warp does not exist!');
+
+                return;
+            }
+
+            $player->sendMessage(TextFormat::GREEN . 'Teleporting...');
+
+            $player->teleport($warp->getLocation());
+        });
+
         $form->showTo($player);
     }
 
@@ -80,45 +80,45 @@ class FormManager {
     public function showAddWarpMenu(Player $player): void {
         $form = new CustomWindowForm(
             'warps_add',
-            'Add new Warp',
-            '',
-            function (Player $player, CustomWindowForm $form) {
-                $warpId = $form->getElement('id');
-                $warp = $warpId->getFinalValue();
-
-                if (strlen($warp) === 0) {
-                    $player->sendMessage(TextFormat::RED . 'Please, insert a valid name or identifier!');
-
-                    return;
-                }
-
-                if ($this->storage->contains($warp)) {
-                    $player->sendMessage(TextFormat::RED . 'That warp id already exist!');
-
-                    return;
-                }
-
-                $main = $this->main;
-
-                $config = $main->getConfig();
-
-                $locationToString = LocationUtils::locationToString($player->getLocation());
-
-                $warps = $config->get('warps');
-                array_push($warps, "$warp;$locationToString");
-
-                $config->set('warps', $warps);
-                $config->save();
-
-                $main->reloadWarpsConfig();
-
-                $player->sendMessage(
-                    TextFormat::GREEN . "You have successfully created the warp: $warp!"
-                );
-            }
+            'Add new Warp'
         );
 
         $form->addInput('id', 'Please insert a warp id:');
+
+        $form->addHandler(function (Player $player, CustomWindowForm $form) {
+            $warpId = $form->getElement('id');
+            $warp = $warpId->getFinalValue();
+
+            if (strlen($warp) === 0) {
+                $player->sendMessage(TextFormat::RED . 'Please, insert a valid name or identifier!');
+
+                return;
+            }
+
+            if ($this->storage->contains($warp)) {
+                $player->sendMessage(TextFormat::RED . 'That warp id already exist!');
+
+                return;
+            }
+
+            $main = $this->main;
+
+            $config = $main->getConfig();
+
+            $locationToString = LocationUtils::locationToString($player->getLocation());
+
+            $warps = $config->get('warps');
+            array_push($warps, "$warp;$locationToString");
+
+            $config->set('warps', $warps);
+            $config->save();
+
+            $main->reloadWarpsConfig();
+
+            $player->sendMessage(
+                TextFormat::GREEN . "You have successfully created the warp: $warp!"
+            );
+        });
 
         $form->showTo($player);
     }
